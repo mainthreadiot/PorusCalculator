@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Porus Finance Calculator - EMI, FD, Percentage, and more.">
+    <meta name="author" content="Porus Finance">
+    <meta name="theme-color" content="#6f42c1">
+    <title>Porus Finance Calculator</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Google_Chrome_icon_%282011%29.svg/512px-Google_Chrome_icon_%282011%29.svg.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+    <style>
+        /* Universal Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+		 .amounts {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .amounts div {
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            width: 45%;
+            text-align: center;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #444;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+header {
+    background: linear-gradient(45deg, #6f42c1, #00bcd4); /* Soft peach gradient */
+    color: yellow;
+    padding: 15px 30px; /* Reduced padding for a more compact header */
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Soft box-shadow */
+    border-bottom: 3px solid #333; /* Thinner bottom border */
+    border-radius: 8px 8px 0 0; /* Add slight rounded corners at the top */
+    margin-bottom: 20px; /* Space below header */
+    display: flex;
+    justify-content: space-between; /* To place logo on the right */
+    align-items: center;
+}
+
+header .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px; /* Spacing between logo and text */
+}
+
+header .logo {
+    width: 40px; /* Smaller logo size */
+    height: 40px; /* Match width and height */
+    margin-left: 10px; /* Space between logo and text */
+}
+
+header h3 {
+    font-size: 24px; /* Slightly smaller font size */
+    font-weight: bold;
+    margin: 0;
+    flex-grow: 1; /* Take up remaining space so text stays on the left */
+    text-align: left; /* Align text to the left */
+}
+
+header .threadiot {
+    font-size: 16px; /* Smaller subheading */
+    font-weight: normal;
+    color: #f0f0f0;
+}
+
+header .logo-container img {
+    margin-left: auto; /* Push logo to the right */
+}
+
+
+header h3 {
+    font-size: 24px; /* Slightly smaller font size */
+    font-weight: bold;
+    margin: 0;
+}
+
+header .threadiot {
+    font-size: 16px; /* Smaller subheading */
+    font-weight: normal;
+    color: #f0f0f0;
+}
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .threadiot {
+            font-size: 18px;
+            font-weight: normal;
+            color: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .threadiot {
+                font-size: 16px;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+
+        section {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #5a34a2;
+        }
+
+        .result {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            background-color: #d9f7f5;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        footer {
+            background-color: #444;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #chartContainer {
+            width: 200px;
+            height: 200px;
+            margin: auto;
+        }
+
+        .emi-chart-container {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .emi-chart-container {
+                width: 100%;
+            }
+
+            .container {
+                padding: 5px;
+            }
+
+            .input-group input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <img src="https://mainthreadiot.github.io/porus/icon/ThreadIoT.ico" alt="Logo" class="logo">
+            <h3>Porus Finance Calculator <br><span class="threadiot"> - Powered by Thread IoT</span></h3>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Section 1: EMI Calculator and Pie Chart -->
+        <section class="section-container">
+            <div class="emi-chart-container">
+                <h2><i class="fas fa-calculator"></i> EMI Calculator</h2>
+                <div class="input-group">
+                    <label for="loanAmount">Loan Amount (₹):</label>
+                    <input type="range" id="loanAmount" min="10000" max="1000000" value="100000" class="slider" oninput="updateSliderValue('loanAmount', 'loanAmountValue')">
+                    <input type="text" id="loanAmountValue" value="100000" class="textbox" oninput="syncTextboxWithSlider('loanAmount', 'loanAmountValue')">
+                </div>
+                <div class="input-group">
+                    <label for="interestRate">Interest Rate (%):</label>
+                    <input type="range" id="interestRate" min="1" max="20" value="8" class="slider" oninput="updateSliderValue('interestRate', 'interestRateValue')">
+                    <input type="text" id="interestRateValue" value="8" class="textbox" oninput="syncTextboxWithSlider('interestRate', 'interestRateValue')">
+                </div>
+                <div class="input-group">
+                    <label for="loanTenure">Loan Tenure (Months):</label>
+                    <input type="range" id="loanTenure" min="12" max="240" value="24" class="slider" oninput="updateSliderValue('loanTenure', 'loanTenureValue')">
+                    <input type="text" id="loanTenureValue" value="24" class="textbox" oninput="syncTextboxWithSlider('loanTenure', 'loanTenureValue')">
+                </div>
+                <button class="btn" onclick="calculateEMI()">Calculate EMI</button>
+                <div class="result" id="emiResult" style="display:none;"></div>
+            </div>
+
+            <div class="emi-chart-container">
+                <h2><i class="fas fa-chart-pie"></i> EMI Breakdown</h2>
+                <canvas id="emiChartCanvas"></canvas>
+				<div class="amounts">
+                    <div id="principalAmount">Principal: ₹0</div>
+                    <div id="interestAmount">Interest: ₹0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: SIP, FD, Percentage Calculators -->
+        <section class="section-container">
+            <!-- SIP Calculator -->
+            <div class="emi-chart-container">
+                <h2><i class="fas fa-calculator"></i> SIP Calculator</h2>
+                <div class="input-group">
+                    <label for="sipAmount">SIP Amount (₹):</label>
+                    <input type="range" id="sipAmount" min="500" max="50000" value="1000" class="slider" oninput="updateSliderValue('sipAmount', 'sipAmountValue')">
+                    <input type="text" id="sipAmountValue" value="1000" class="textbox" oninput="syncTextboxWithSlider('sipAmount', 'sipAmountValue')">
+                </div>
+                <div class="input-group">
+                    <label for="sipRate">Annual Return Rate (%):</label>
+                    <input type="range" id="sipRate" min="1" max="25" value="12" class="slider" oninput="updateSliderValue('sipRate', 'sipRateValue')">
+                    <input type="text" id="sipRateValue" value="12" class="textbox" oninput="syncTextboxWithSlider('sipRate', 'sipRateValue')">
+                </div>
+                <div class="input-group">
+                    <label for="sipTenure">Investment Tenure (Years):</label>
+                    <input type="range" id="sipTenure" min="1" max="30" value="5" class="slider" oninput="updateSliderValue('sipTenure', 'sipTenureValue')">
+                    <input type="text" id="sipTenureValue" value="5" class="textbox" oninput="syncTextboxWithSlider('sipTenure', 'sipTenureValue')">
+                </div>
+                <button class="btn" onclick="calculateSIP()">Calculate SIP</button>
+                <div class="result" id="sipResult"></div>
+            </div>
+
+            <div class="emi-chart-container">
+                <h2><i class="fas fa-piggy-bank"></i> SIP Breakdown</h2>
+                <canvas id="sipChartContainer"></canvas>
+				<div class="amounts">
+                    <div id="principalAmount1">Principal: ₹0</div>
+                    <div id="interestAmount1">Interest: ₹0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: FD and Percentage Calculators -->
+        <section class="section-container">
+            <!-- FD Calculator -->
+            <div class="emi-chart-container">
+                <h2><i class="fas fa-bank"></i> FD Calculator</h2>
+                <div class="input-group">
+                    <label for="fdAmount">FD Amount (₹):</label>
+                    <input type="range" id="fdAmount" min="10000" max="1000000" value="50000" class="slider" oninput="updateSliderValue('fdAmount', 'fdAmountValue')">
+                    <input type="text" id="fdAmountValue" value="50000" class="textbox" oninput="syncTextboxWithSlider('fdAmount', 'fdAmountValue')">
+                </div>
+                <div class="input-group">
+                    <label for="fdRate">Interest Rate (%):</label>
+                    <input type="range" id="fdRate" min="3" max="15" value="7" class="slider" oninput="updateSliderValue('fdRate', 'fdRateValue')">
+                    <input type="text" id="fdRateValue" value="7" class="textbox" oninput="syncTextboxWithSlider('fdRate', 'fdRateValue')">
+                </div>
+                <div class="input-group">
+                    <label for="fdTenure">FD Tenure (Years):</label>
+                    <input type="range" id="fdTenure" min="1" max="10" value="3" class="slider" oninput="updateSliderValue('fdTenure', 'fdTenureValue')">
+                    <input type="text" id="fdTenureValue" value="3" class="textbox" oninput="syncTextboxWithSlider('fdTenure', 'fdTenureValue')">
+                </div>
+                <button class="btn" onclick="calculateFD()">Calculate FD</button>
+                <div class="result" id="fdResult"></div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <h6>&copy; 2025 Thread IoT | All Rights Reserved - ✉ main.thread.iot@gmail.com</a></h6>
+    </footer>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sync slider with textbox
+        function updateSliderValue(sliderId, textboxId) {
+            const slider = document.getElementById(sliderId);
+            const textbox = document.getElementById(textboxId);
+            textbox.value = slider.value;
+        }
+
+        // Sync textbox with slider
+        function syncTextboxWithSlider(sliderId, textboxId) {
+            const textbox = document.getElementById(textboxId);
+            const slider = document.getElementById(sliderId);
+            if (!isNaN(textbox.value)) {
+                slider.value = textbox.value;
+            }
+        }
+		        function destroyChart(chartInstance) {
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+        }
+
+        let emiChart = null;
+        let sipChart = null;
+
+        // Function to update slider value dynamically
+        function updateSliderValue(sliderId, valueId) {
+            var slider = document.getElementById(sliderId);
+            var value = document.getElementById(valueId);
+            value.textContent = slider.value;
+        }
+
+        // Function to calculate EMI
+        function calculateEMI() {
+            var loanAmount = parseFloat(document.getElementById("loanAmount").value);
+            var interestRate = parseFloat(document.getElementById("interestRate").value);
+            var loanTenure = parseInt(document.getElementById("loanTenure").value);
+
+            if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(loanTenure)) {
+                alert("Please fill all fields correctly.");
+                return;
+            }
+
+            var r = interestRate / 100 / 12;
+            var emi = (loanAmount * r * Math.pow(1 + r, loanTenure)) / (Math.pow(1 + r, loanTenure) - 1);
+            var totalPayment = emi * loanTenure;
+            var totalInterest = totalPayment - loanAmount;
+            const interestAmount = totalPayment - loanAmount;
+
+            document.getElementById("emiResult").style.display = "block";
+            document.getElementById("emiResult").textContent = "EMI: ₹" + emi.toFixed(2);
+
+			document.getElementById("principalAmount").textContent = `Principal: ₹${loanAmount.toFixed(2)}`;
+            document.getElementById("interestAmount").textContent = `Interest: ₹${interestAmount.toFixed(2)}`;
+
+			
+            // Destroy any existing EMI chart before creating a new one
+            destroyChart(emiChart);
+
+            // Create the new EMI chart
+            var ctx = document.getElementById('emiChartCanvas').getContext('2d');
+            emiChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Loan Amount', 'Total Interest'],
+                    datasets: [{
+                        data: [loanAmount, totalInterest],
+                        backgroundColor: ['#28a745', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ₹' + tooltipItem.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to calculate SIP
+        function calculateSIP() {
+            var sipAmount = parseFloat(document.getElementById("sipAmount").value);
+            var sipRate = parseFloat(document.getElementById("sipRate").value);
+            var sipTenure = parseInt(document.getElementById("sipTenure").value);
+
+            if (isNaN(sipAmount) || isNaN(sipRate) || isNaN(sipTenure)) {
+                alert("Please fill all fields correctly.");
+                return;
+            }
+
+            var monthlyRate = sipRate / 12 / 100;
+            var months = sipTenure * 12;
+            var totalAmount = sipAmount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+            var totalInvested = sipAmount * months;
+            var interestEarned = totalAmount - totalInvested;
+
+            document.getElementById("sipResult").textContent = "Total SIP Value: ₹" + totalAmount.toFixed(2);
+
+            // Destroy any existing SIP chart before creating a new one
+            destroyChart(sipChart);
+document.getElementById("principalAmount1").textContent = `Principal: ₹${totalInvested.toFixed(2)}`;
+            document.getElementById("interestAmount1").textContent = `Interest: ₹${interestEarned.toFixed(2)}`;
+			
+            // Create the new SIP chart
+            var ctx = document.getElementById('sipChartContainer').getContext('2d');
+            sipChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Investment', 'Interest Earned'],
+                    datasets: [{
+                        label: 'SIP Breakdown',
+                        data: [totalInvested, interestEarned],
+                        backgroundColor: ['#28a745', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ₹' + tooltipItem.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to calculate FD
+        function calculateFD() {
+            var fdAmount = parseFloat(document.getElementById("fdAmount").value);
+            var fdInterest = parseFloat(document.getElementById("fdRateValue").value);
+            var fdTenure = parseInt(document.getElementById("fdTenure").value);
+
+            if (isNaN(fdAmount) || isNaN(fdInterest) || isNaN(fdTenure)) {
+                alert("Please fill all fields correctly.");
+                return;
+            }
+
+            var totalAmount = fdAmount * Math.pow(1 + fdInterest / 100, fdTenure);
+            var interestEarned = totalAmount - fdAmount;
+
+            document.getElementById("fdResult").textContent = "Total FD Value: ₹" + totalAmount.toFixed(2);
+        }
+
+        // Function to calculate Percentage
+        function calculatePercentage() {
+            var totalAmount = parseFloat(document.getElementById("totalAmount").value);
+            var percentageValue = parseFloat(document.getElementById("percentageValue").value);
+
+            if (isNaN(totalAmount) || isNaN(percentageValue)) {
+                alert("Please fill all fields correctly.");
+                return;
+            }
+
+            var percentageAmount = (totalAmount * percentageValue) / 100;
+            document.getElementById("percentageResult").textContent = "Percentage Amount: ₹" + percentageAmount.toFixed(2);
+        }	
+    </script>
+</body>
+</html>
