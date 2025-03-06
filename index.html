@@ -85,13 +85,14 @@ th {
 header {
     background: linear-gradient(45deg, #6f42c1, #00bcd4); /* Soft peach gradient */
     color: yellow;
-    padding: 15px 30px; /* Reduced padding for a more compact header */
+    padding: 15px 15px; /* Reduced padding for a more compact header */
     text-align: center;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Soft box-shadow */
     border-bottom: 3px solid #333; /* Thinner bottom border */
     border-radius: 8px 8px 0 0; /* Add slight rounded corners at the top */
     margin-bottom: 20px; /* Space below header */
     display: flex;
+	Height : 60px;
     justify-content: space-between; /* To place logo on the right */
     align-items: center;
 }
@@ -136,7 +137,7 @@ header h3 {
 }
 
 header .threadiot {
-    font-size: 16px; /* Smaller subheading */
+    font-size: 10px; /* Smaller subheading */
     font-weight: normal;
     color: #f0f0f0;
 }
@@ -146,6 +147,7 @@ header .threadiot {
             justify-content: center;
             align-items: center;
             flex-direction: column;
+			height:10px;
         }
 
         .logo {
@@ -176,7 +178,7 @@ header .threadiot {
 
             .logo {
                 width: 40px;
-                height: 40px;
+                height: 20px;
             }
 
             h1 {
@@ -321,8 +323,8 @@ header .threadiot {
 
 #shortcuts button:hover {
     background-color: #0056b3;
-}
-	    .small-button {
+}   
+.small-button {
         font-size: 7px; /* Smaller text */
         padding: 4px 8px; /* Smaller padding */
         border-radius: 4px; /* Rounded corners */
@@ -343,11 +345,11 @@ header .threadiot {
     <header>
         <div class="logo-container">
             <img src="https://mainthreadiot.github.io/porus/icon/ThreadIoT.ico" alt="Logo" class="logo">
-            <h3>Porus Finance Calculator <br><span class="threadiot"> - Powered by Thread IoT</span></h3>
+            <h3>Porus Finance Calculator<span class="threadiot"> - Powered by Thread IoT</span></h3>
         </div>
 		
 		<div id="shortcuts" style="margin-top: 20px;">
-   <button class="small-button" onclick="scrollToSection('emiCalculator')">EMI Calculator</button>
+    <button class="small-button" onclick="scrollToSection('emiCalculator')">EMI Calculator</button>
     <button class="small-button" onclick="scrollToSection('sipCalculator')">SIP Calculator</button>
     <button class="small-button" onclick="scrollToSection('fdCalculator')">FD Calculator</button>
 </div>
