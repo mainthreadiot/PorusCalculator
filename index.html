@@ -322,6 +322,19 @@ header .threadiot {
 #shortcuts button:hover {
     background-color: #0056b3;
 }
+	    .small-button {
+        font-size: 7px; /* Smaller text */
+        padding: 4px 8px; /* Smaller padding */
+        border-radius: 4px; /* Rounded corners */
+        background-color: #007bff; /* Button color */
+        color: white; /* Text color */
+        border: none; /* Remove border */
+        cursor: pointer; /* Pointer cursor on hover */
+    }
+
+    .small-button:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
     </style>
 </head>
 <body>
@@ -334,9 +347,9 @@ header .threadiot {
         </div>
 		
 		<div id="shortcuts" style="margin-top: 20px;">
-    <button onclick="scrollToSection('emiCalculator')">EMI Calculator</button>
-    <button onclick="scrollToSection('sipCalculator')">SIP Calculator</button>
-    <button onclick="scrollToSection('fdCalculator')">FD Calculator</button>
+   <button class="small-button" onclick="scrollToSection('emiCalculator')">EMI Calculator</button>
+    <button class="small-button" onclick="scrollToSection('sipCalculator')">SIP Calculator</button>
+    <button class="small-button" onclick="scrollToSection('fdCalculator')">FD Calculator</button>
 </div>
     </header>
 
