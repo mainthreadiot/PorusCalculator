@@ -9,7 +9,7 @@
     
     <!-- Description for SEO -->
     <meta name="description" content="Porus Finance Calculator - EMI, FD, Percentage, Interest Calculation tools to make your finance management easier.">
-        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="ThreadIoT.ico" type="image/x-icon">
 
     <!-- Keywords for SEO -->
     <meta name="keywords" content="EMI Calculator, FD Calculator, Percentage Calculator, Finance Calculator, Porus Finance, Financial Tools">
@@ -308,6 +308,20 @@ header .threadiot {
                 width: 100%;
             }
         }
+		#shortcuts button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#shortcuts button:hover {
+    background-color: #0056b3;
+}
     </style>
 </head>
 <body>
@@ -318,17 +332,23 @@ header .threadiot {
             <img src="https://mainthreadiot.github.io/porus/icon/ThreadIoT.ico" alt="Logo" class="logo">
             <h3>Porus Finance Calculator <br><span class="threadiot"> - Powered by Thread IoT</span></h3>
         </div>
+		
+		<div id="shortcuts" style="margin-top: 20px;">
+    <button onclick="scrollToSection('emiCalculator')">EMI Calculator</button>
+    <button onclick="scrollToSection('sipCalculator')">SIP Calculator</button>
+    <button onclick="scrollToSection('fdCalculator')">FD Calculator</button>
+</div>
     </header>
 
     <!-- Main Container -->
     <div class="container">
         <!-- Section 1: EMI Calculator and Pie Chart -->
         <section class="section-container">
-            <div class="emi-chart-container">
+            <div  id="emiCalculator" class="emi-chart-container">
                 <h2><i class="fas fa-calculator"></i> EMI Calculator</h2>
                 <div class="input-group">
                     <label for="loanAmount">Loan Amount (₹):</label>
-                    <input type="range" id="loanAmount" min="10000" max="1000000" value="100000" class="slider" oninput="updateSliderValue('loanAmount', 'loanAmountValue')">
+                    <input type="range" id="loanAmount" min="10000" max="100000000" value="100000" class="slider" oninput="updateSliderValue('loanAmount', 'loanAmountValue')">
                     <input type="text" id="loanAmountValue" value="100000" class="textbox" oninput="syncTextboxWithSlider('loanAmount', 'loanAmountValue')">
                 </div>
                 <div class="input-group">
@@ -349,7 +369,7 @@ header .threadiot {
                 <h2><i class="fas fa-chart-pie"></i> EMI Breakdown</h2>
                 <canvas id="emiChartCanvas"></canvas>
 				<div class="amounts">
-                    <div id="Amount">Principal: ₹0</div>
+                    <div id="Amount">: ₹0</div>
                     <div id="interestAmount">Interest: ₹0</div>
                 </div>
             </div>
@@ -359,7 +379,7 @@ header .threadiot {
 		<div id="breakdownSection" style="margin-top: 20px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <!-- Breakdown table will be dynamically added here -->
 </div>
-<div id="pagination" style="margin-top: 10px; text-align: center;">
+<div  id="pagination" style="margin-top: 10px; text-align: center;">
     <!-- Pagination controls will be dynamically added here -->
 </div>
 </section>
@@ -369,9 +389,9 @@ header .threadiot {
             <!-- SIP Calculator -->
             <div class="emi-chart-container">
                 <h2><i class="fas fa-calculator"></i> SIP Calculator</h2>
-                <div class="input-group">
+                <div id="sipCalculator" class="input-group">
                     <label for="sipAmount">SIP Amount (₹):</label>
-                    <input type="range" id="sipAmount" min="500" max="50000" value="1000" class="slider" oninput="updateSliderValue('sipAmount', 'sipAmountValue')">
+                    <input type="range" id="sipAmount" min="500" max="100000" value="1000" class="slider" oninput="updateSliderValue('sipAmount', 'sipAmountValue')">
                     <input type="text" id="sipAmountValue" value="1000" class="textbox" oninput="syncTextboxWithSlider('sipAmount', 'sipAmountValue')">
                 </div>
                 <div class="input-group">
@@ -401,7 +421,7 @@ header .threadiot {
         <!-- Section 3: FD and Percentage Calculators -->
         <section class="section-container">
             <!-- FD Calculator -->
-            <div class="emi-chart-container">
+            <div id="fdCalculator" class="emi-chart-container">
                 <h2><i class="fas fa-bank"></i> FD Calculator</h2>
                 <div class="input-group">
                     <label for="fdAmount">FD Amount (₹):</label>
@@ -428,7 +448,16 @@ header .threadiot {
         <h6>&copy; 2025 Thread IoT | All Rights Reserved - ✉ main.thread.iot@gmail.com</a></h6>
     </footer>
  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script>
+	function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 	function generateEMIBreakdown(principal, monthlyRate, emi, tenure) {
     const breakdownContainer = document.getElementById("breakdownSection");
     const paginationContainer = document.getElementById("pagination");
@@ -518,11 +547,7 @@ header .threadiot {
     breakdownContainer.appendChild(table);
 }
         // Sync slider with textbox
-        function updateSliderValue(sliderId, textboxId) {
-            const slider = document.getElementById(sliderId);
-            const textbox = document.getElementById(textboxId);
-            textbox.value = slider.value;
-        }
+        
 
         // Sync textbox with slider
         function syncTextboxWithSlider(sliderId, textboxId) {
@@ -542,11 +567,11 @@ header .threadiot {
         let sipChart = null;
 
         // Function to update slider value dynamically
-        function updateSliderValue(sliderId, valueId) {
-            var slider = document.getElementById(sliderId);
-            var value = document.getElementById(valueId);
-            value.textContent = slider.value;
-        }
+       function updateSliderValue(sliderId, valueId) {
+    var slider = document.getElementById(sliderId);
+    var value = document.getElementById(valueId);
+    value.value = slider.value; // Update the textbox value
+}
 
         // Function to calculate EMI
     function calculateEMI() {
