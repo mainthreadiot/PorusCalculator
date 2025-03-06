@@ -333,7 +333,7 @@ header .threadiot {
                 <h2><i class="fas fa-chart-pie"></i> EMI Breakdown</h2>
                 <canvas id="emiChartCanvas"></canvas>
 				<div class="amounts">
-                    <div id="principalAmount">Principal: ₹0</div>
+                    <div id="Amount">: ₹0</div>
                     <div id="interestAmount">Interest: ₹0</div>
                 </div>
             </div>
@@ -367,7 +367,7 @@ header .threadiot {
                 <h2><i class="fas fa-piggy-bank"></i> SIP Breakdown</h2>
                 <canvas id="sipChartContainer"></canvas>
 				<div class="amounts">
-                    <div id="principalAmount1">Principal: ₹0</div>
+                    <div id="Amount1">: ₹0</div>
                     <div id="interestAmount1">Interest: ₹0</div>
                 </div>
             </div>
@@ -467,29 +467,30 @@ header .threadiot {
             emiChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Loan Amount', 'Total Interest'],
+                    labels: ['Principal', 'Interest'],
                     datasets: [{
+                        label: 'EMI Breakdown',
                         data: [loanAmount, totalInterest],
-                        backgroundColor: ['#28a745', '#dc3545']
+                        backgroundColor: ['#6f42c1', '#00bcd4'],
+                        hoverBackgroundColor: ['#5a34a2', '#009fbf']
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return tooltipItem.label + ': ₹' + tooltipItem.raw.toFixed(2);
-                                }
+                        datalabels: {
+                            color: '#fff',
+                            formatter: (value, ctx) => {
+                                let total = ctx.dataset.data.reduce((acc, val) => acc + val, 0);
+                                let percentage = ((value / total) * 100).toFixed(2);
+                                return `${percentage}%`;
                             }
                         }
                     }
                 }
             });
         }
+
 
         // Function to calculate SIP
         function calculateSIP() {
