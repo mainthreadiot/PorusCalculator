@@ -9,7 +9,7 @@
     
     <!-- Description for SEO -->
     <meta name="description" content="Porus Finance Calculator - EMI, FD, Percentage, Interest Calculation tools to make your finance management easier.">
-        <link rel="icon" href="ThreadIoT.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Keywords for SEO -->
     <meta name="keywords" content="EMI Calculator, FD Calculator, Percentage Calculator, Finance Calculator, Porus Finance, Financial Tools">
@@ -37,6 +37,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
     <style>
+	table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
         /* Universal Styles */
         * {
             margin: 0;
@@ -338,6 +354,15 @@ header .threadiot {
                 </div>
             </div>
         </section>
+		  <section class="section-container">
+		  <h2><i class="fas fa-calculator"></i> EMI Breakdown</h2>
+		<div id="breakdownSection" style="margin-top: 20px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <!-- Breakdown table will be dynamically added here -->
+</div>
+<div id="pagination" style="margin-top: 10px; text-align: center;">
+    <!-- Pagination controls will be dynamically added here -->
+</div>
+</section>
 
         <!-- Section 2: SIP, FD, Percentage Calculators -->
         <section class="section-container">
@@ -404,6 +429,94 @@ header .threadiot {
     </footer>
  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+	function generateEMIBreakdown(principal, monthlyRate, emi, tenure) {
+    const breakdownContainer = document.getElementById("breakdownSection");
+    const paginationContainer = document.getElementById("pagination");
+    breakdownContainer.innerHTML = ""; // Clear previous breakdown
+    paginationContainer.innerHTML = ""; // Clear previous pagination
+
+    let remainingPrincipal = principal;
+    const rowsPerPage = 10; // Number of rows per page
+    const totalPages = Math.ceil(tenure / rowsPerPage);
+
+    // Create table
+    const table = document.createElement("table");
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th style="border: 1px solid #ccc; padding: 8px;">Month</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">EMI (₹)</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Interest (₹)</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Principal (₹)</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Remaining Principal (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    `;
+
+    const tbody = table.querySelector("tbody");
+
+    // Generate rows for all months
+    const rows = [];
+    for (let month = 1; month <= tenure; month++) {
+        const interestForMonth = remainingPrincipal * monthlyRate;
+        const principalForMonth = emi - interestForMonth;
+        remainingPrincipal -= principalForMonth;
+
+        const row = `
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">${month}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${emi.toFixed(2)}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${interestForMonth.toFixed(2)}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${principalForMonth.toFixed(2)}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${remainingPrincipal.toFixed(2)}</td>
+            </tr>
+        `;
+        rows.push(row);
+    }
+
+    // Function to render a page
+    function renderPage(page) {
+        tbody.innerHTML = ""; // Clear previous rows
+        const start = (page - 1) * rowsPerPage;
+        const end = Math.min(start + rowsPerPage, rows.length);
+
+        for (let i = start; i < end; i++) {
+            tbody.innerHTML += rows[i];
+        }
+    }
+
+    // Create pagination controls
+    for (let page = 1; page <= totalPages; page++) {
+        const button = document.createElement("button");
+        button.textContent = page;
+        button.style.margin = "0 5px";
+        button.style.padding = "5px 10px";
+        button.style.border = "1px solid #ccc";
+        button.style.borderRadius = "4px";
+        button.style.cursor = "pointer";
+        button.style.background = "#f9f9f9";
+
+        // Highlight current page
+        button.addEventListener("click", () => {
+            document.querySelectorAll("#pagination button").forEach(btn => {
+                btn.style.background = "#f9f9f9";
+            });
+            button.style.background = "#d1e7dd";
+            renderPage(page);
+        });
+
+        paginationContainer.appendChild(button);
+    }
+
+    // Render the first page by default
+    renderPage(1);
+
+    breakdownContainer.appendChild(table);
+}
         // Sync slider with textbox
         function updateSliderValue(sliderId, textboxId) {
             const slider = document.getElementById(sliderId);
@@ -436,67 +549,79 @@ header .threadiot {
         }
 
         // Function to calculate EMI
-        function calculateEMI() {
-            var loanAmount = parseFloat(document.getElementById("loanAmount").value);
-            var interestRate = parseFloat(document.getElementById("interestRate").value);
-            var loanTenure = parseInt(document.getElementById("loanTenure").value);
+    function calculateEMI() {
+    var loanAmount = parseFloat(document.getElementById("loanAmountValue").value);
+    var annualInterestRate = parseFloat(document.getElementById("interestRateValue").value);
+    var loanTenure = parseInt(document.getElementById("loanTenureValue").value); // Tenure in months
 
-            if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(loanTenure)) {
-                alert("Please fill all fields correctly.");
-                return;
-            }
+    // Validation
+    if (isNaN(loanAmount) || isNaN(annualInterestRate) || isNaN(loanTenure)) {
+        alert("Please fill all fields correctly.");
+        return;
+    }
 
-            var r = interestRate / 100 / 12;
-            var emi = (loanAmount * r * Math.pow(1 + r, loanTenure)) / (Math.pow(1 + r, loanTenure) - 1);
-            var totalPayment = emi * loanTenure;
-            var totalInterest = totalPayment - loanAmount;
-            const interestAmount = totalPayment - loanAmount;
+    // Monthly interest rate
+    const monthlyInterestRate = annualInterestRate / 12 / 100;
 
-            document.getElementById("emiResult").style.display = "block";
-            document.getElementById("emiResult").textContent = "EMI: ₹" + emi.toFixed(2);
+    // EMI calculation using the formula
+    const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTenure)) /
+                (Math.pow(1 + monthlyInterestRate, loanTenure) - 1);
 
-			document.getElementById("principalAmount").textContent = `Principal: ₹${loanAmount.toFixed(2)}`;
-            document.getElementById("interestAmount").textContent = `Interest: ₹${interestAmount.toFixed(2)}`;
+    // Total payment and interest
+    const totalPayment = emi * loanTenure;
+    const totalInterest = totalPayment - loanAmount;
 
-			
-            // Destroy any existing EMI chart before creating a new one
-            destroyChart(emiChart);
+    // Display the results
+    document.getElementById("emiResult").style.display = "block";
+    document.getElementById("emiResult").textContent = "EMI: ₹" + emi.toFixed(2);
 
-            // Create the new EMI chart
-            var ctx = document.getElementById('emiChartCanvas').getContext('2d');
-            emiChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Principal', 'Interest'],
-                    datasets: [{
-                        label: 'EMI Breakdown',
-                        data: [loanAmount, totalInterest],
-                        backgroundColor: ['#6f42c1', '#00bcd4'],
-                        hoverBackgroundColor: ['#5a34a2', '#009fbf']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        datalabels: {
-                            color: '#fff',
-                            formatter: (value, ctx) => {
-                                let total = ctx.dataset.data.reduce((acc, val) => acc + val, 0);
-                                let percentage = ((value / total) * 100).toFixed(2);
-                                return `${percentage}%`;
-                            }
-                        }
+    document.getElementById("Amount").textContent = `Principal: ₹${loanAmount.toFixed(2)}`;
+    document.getElementById("interestAmount").textContent = `Interest: ₹${totalInterest.toFixed(2)}`;
+
+//
+    generateEMIBreakdown(loanAmount, monthlyInterestRate, emi, loanTenure);
+
+    // Destroy existing chart before creating a new one
+    destroyChart(emiChart);
+
+    // Create the EMI breakdown chart
+    var ctx = document.getElementById('emiChartCanvas').getContext('2d');
+    emiChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Principal', 'Interest'],
+            datasets: [{
+                label: 'EMI Breakdown',
+                data: [loanAmount, totalInterest],
+                backgroundColor: ['#6f42c1', '#00bcd4'],
+                hoverBackgroundColor: ['#5a34a2', '#009fbf']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    color: '#fff',
+                    formatter: (value, ctx) => {
+                        let total = ctx.dataset.data.reduce((acc, val) => acc + val, 0);
+                        let percentage = ((value / total) * 100).toFixed(2);
+                        return `${percentage}%`;
                     }
                 }
-            });
+            }
         }
+    });
+}
+
+
+
 
 
         // Function to calculate SIP
         function calculateSIP() {
-            var sipAmount = parseFloat(document.getElementById("sipAmount").value);
-            var sipRate = parseFloat(document.getElementById("sipRate").value);
-            var sipTenure = parseInt(document.getElementById("sipTenure").value);
+            var sipAmount = parseFloat(document.getElementById("sipAmountValue").value);
+            var sipRate = parseFloat(document.getElementById("sipRateValue").value);
+            var sipTenure = parseInt(document.getElementById("sipTenureValue").value);
 
             if (isNaN(sipAmount) || isNaN(sipRate) || isNaN(sipTenure)) {
                 alert("Please fill all fields correctly.");
@@ -513,7 +638,7 @@ header .threadiot {
 
             // Destroy any existing SIP chart before creating a new one
             destroyChart(sipChart);
-document.getElementById("principalAmount1").textContent = `Principal: ₹${totalInvested.toFixed(2)}`;
+document.getElementById("Amount1").textContent = `Principal: ₹${totalInvested.toFixed(2)}`;
             document.getElementById("interestAmount1").textContent = `Interest: ₹${interestEarned.toFixed(2)}`;
 			
             // Create the new SIP chart
@@ -548,9 +673,9 @@ document.getElementById("principalAmount1").textContent = `Principal: ₹${total
 
         // Function to calculate FD
         function calculateFD() {
-            var fdAmount = parseFloat(document.getElementById("fdAmount").value);
+            var fdAmount = parseFloat(document.getElementById("fdAmountValue").value);
             var fdInterest = parseFloat(document.getElementById("fdRateValue").value);
-            var fdTenure = parseInt(document.getElementById("fdTenure").value);
+            var fdTenure = parseInt(document.getElementById("fdTenureValue").value);
 
             if (isNaN(fdAmount) || isNaN(fdInterest) || isNaN(fdTenure)) {
                 alert("Please fill all fields correctly.");
