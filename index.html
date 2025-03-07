@@ -364,20 +364,23 @@ header .threadiot {
                     <input type="range" id="loanAmount" min="10000" max="100000000" value="100000" class="slider" oninput="updateSliderValue('loanAmount', 'loanAmountValue')">
                     <input type="text" id="loanAmountValue" value="100000" class="textbox" oninput="syncTextboxWithSlider('loanAmount', 'loanAmountValue')">
                 </div>
+		    <hr>
                 <div class="input-group">
                     <label for="interestRate">Interest Rate (%):</label>
                     <input type="range" id="interestRate" min="1" max="20" value="8" class="slider" oninput="updateSliderValue('interestRate', 'interestRateValue')">
                     <input type="text" id="interestRateValue" value="8" class="textbox" oninput="syncTextboxWithSlider('interestRate', 'interestRateValue')">
                 </div>
+		    <hr>
                 <div class="input-group">
                     <label for="loanTenure">Loan Tenure (Months):</label>
                     <input type="range" id="loanTenure" min="12" max="240" value="24" class="slider" oninput="updateSliderValue('loanTenure', 'loanTenureValue')">
                     <input type="text" id="loanTenureValue" value="24" class="textbox" oninput="syncTextboxWithSlider('loanTenure', 'loanTenureValue')">
                 </div>
+		    <hr>
                 <button class="btn" onclick="calculateEMI()">Calculate EMI</button>
                 <div class="result" id="emiResult" style="display:none;"></div>
             </div>
-
+		
             <div class="emi-chart-container">
                 <h2><i class="fas fa-chart-pie"></i> EMI Breakdown</h2>
                 <canvas id="emiChartCanvas"></canvas>
